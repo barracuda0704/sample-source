@@ -1,0 +1,99 @@
+// Decompiled by DJ v3.6.6.79 Copyright 2004 Atanas Neshkov  Date: 2016-02-22 ¿ÀÀü 11:00:43
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   SessionServlet.java
+
+package com.penta.servlet;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class SessionServlet extends HttpServlet
+{
+
+    public SessionServlet()
+    {
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        StringBuffer sb;
+        HttpSession session = null;
+        Date date = null;
+        SimpleDateFormat sdf = null;
+        sb = null;
+        RequestDispatcher rd = null;
+        try
+        {
+            HttpSession session = request.getSession();
+            Date date;
+            SimpleDateFormat sdf;
+            if(session != null)
+            {
+                date = new Date(session.getCreationTime());
+                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                sb = new StringBuffer();
+                Integer counter = (Integer)session.getAttribute("counter");
+                if(counter == null)
+                    counter = new Integer(1);
+                else
+                    counter = Integer.valueOf(counter.intValue() + 1);
+                session.setAttribute("counter", counter);
+                String instanceID = session.getId().substring(session.getId().indexOf(".") + 1);
+                String sessionID = session.getId();
+                String makeSessionTime = sdf.format(date);
+                String sessionInterval = String.valueOf(session.getMaxInactiveInterval() / 60);
+                request.setAttribute("counter", counter.toString());
+                request.setAttribute("instanceID", instanceID);
+                request.setAttribute("sessionID", sessionID);
+                request.setAttribute("makeSessionTime", makeSessionTime);
+                request.setAttribute("sessionInterval", sessionInterval);
+                sessionID = (new StringBuilder("Session ID              - ")).append(sessionID).append("\n").toString();
+                String line = "";
+                for(int i = 0; i < sessionID.length(); i++)
+                    line = (new StringBuilder(String.valueOf(line))).append("=").toString();
+
+                sb.append((new StringBuilder(String.valueOf(line))).append("\n").toString());
+                sb.append((new StringBuilder("Session Creation Time   - ")).append(makeSessionTime).append("\n").toString());
+                sb.append((new StringBuilder("Session Active Interval - ")).append(sessionInterval).append(" min\n").toString());
+                sb.append(sessionID);
+                sb.append((new StringBuilder("Session counter         - ")).append(counter).append("\n").toString());
+                sb.append(line);
+            } else
+            {
+                System.out.println("##### SESSION IS NULL!!! #####");
+            }
+            date = new Date();
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            request.setAttribute("date", sdf.format(date));
+            RequestDispatcher rd = request.getRequestDispatcher("session.jsp");
+            rd.forward(request, response);
+            break MISSING_BLOCK_LABEL_521;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println(sb.toString());
+        break MISSING_BLOCK_LABEL_532;
+        Exception exception;
+        exception;
+        System.out.println(sb.toString());
+        throw exception;
+        System.out.println(sb.toString());
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        doGet(request, response);
+    }
+
+    private static final long serialVersionUID = 1L;
+}
