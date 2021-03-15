@@ -8,8 +8,14 @@
 	<name>jbosseap0001</name>
 	<repositories>
 		<repository>
-			<id>local-repository</id>
-			<url>file://${basedir}/local-repo</url>
+			<id>eap</id>
+			<url>http://maven.repository.redhat.com/ga/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 	<properties>
